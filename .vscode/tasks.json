@@ -1,0 +1,154 @@
+// Tasks mirror the CI checks so "it passes locally" means "it passes in CI".
+// Run with Terminal > Run Task..., or Ctrl+Shift+B for the default build task
+// ("check: all"). Every command goes through `uv run`, so no venv activation is
+// needed and the tool versions locked in uv.lock are used.
+//
+// Lint policy: nothing auto-fixes on save (see settings.json). The "ruff: fix"
+// and "ruff: format" tasks are the deliberate, on-demand way to apply fixes.
+//
+// Tasks reference:   https://code.visualstudio.com/docs/debugtest/tasks
+// Problem matchers:
+//   https://code.visualstudio.com/docs/debugtest/tasks#_defining-a-problem-matcher
+{
+  "version": "2.0.0",
+  "options": {
+    "cwd": "${workspaceFolder}"
+  },
+  "presentation": {
+    "reveal": "always",
+    "panel": "dedicated",
+    "clear": true,
+    "showReuseMessage": false
+  },
+  "tasks": [
+    {
+      // `uv run` already syncs before each command; this task exists to refresh
+      // .venv for the parts of VS Code that read it directly (Pylance, Testing
+      // panel, debugger, Ruff extension), e.g. after a pull that changes deps.
+      "label": "uv: sync",
+      "detail": "Create/update .venv incl. dev group; updates uv.lock if deps changed.",
+      "type": "shell",
+      "command": "uv",
+      "args": ["sync"],
+      "problemMatcher": []
+    },
+    {
+      "label": "ruff: check",
+      "detail": "Lint per [tool.ruff.lint]; results also go to the Problems panel.",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "ruff", "check", "--output-format=concise", "."],
+      "problemMatcher": {
+        "owner": "ruff-task",
+        "source": "ruff",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          // e.g. src/gcatpy/hello.py:3:8: F401 [*] `os` imported but unused
+          "regexp": "^(.+):(\\d+):(\\d+): ([A-Z]+\\d+) (.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "code": 4,
+          "message": 5
+        },
+        "severity": "warning"
+      }
+    },
+    {
+      "label": "ruff: format check",
+      "detail": "Show what the formatter would change; modifies nothing (CI).",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "ruff", "format", "--check", "--diff", "."],
+      "problemMatcher": []
+    },
+    {
+      "label": "ruff: fix",
+      "detail": "Apply Ruff's safe autofixes in place; review with git diff.",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "ruff", "check", "--fix", "."],
+      "problemMatcher": []
+    },
+    {
+      "label": "ruff: format",
+      "detail": "Format all files in place.",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "ruff", "format", "."],
+      "problemMatcher": []
+    },
+    {
+      // Composed with dependsOn rather than `a && b`, which Windows PowerShell 5.1
+      // rejects.
+      "label": "ruff: fix + format",
+      "detail": "Apply safe autofixes, then format all files in place.",
+      "dependsOrder": "sequence",
+      "dependsOn": ["ruff: fix", "ruff: format"],
+      "problemMatcher": []
+    },
+    {
+      "label": "pyright: check",
+      "detail": "Type-check with the pinned pyright (authoritative over Pylance).",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "pyright"],
+      "problemMatcher": {
+        "owner": "pyright-task",
+        "source": "pyright",
+        "fileLocation": ["autoDetect", "${workspaceFolder}"],
+        "pattern": {
+          // Each diagnostic line carries the absolute path; the greedy (.+) backtracks
+          // past the Windows drive-letter colon. Only the first line of a multi-line
+          // message is captured; the full text is in the terminal.
+          // e.g.   C:\dev\gcatpy\src\gcatpy\x.py:12:5 - error: "x" is not defined
+          // The severity group captures "error", "warning", or "info" (the trailing
+          // letters of pyright's "information" are matched outside the group)
+          // because VS Code's severity parser recognizes only those three words.
+          "regexp": "^\\s+(.+):(\\d+):(\\d+) - (error|warning|info)[a-z]*: (.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        }
+      }
+    },
+    {
+      "label": "pytest: run",
+      "detail": "Run the test suite with options from [tool.pytest].",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "pytest"],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "pytest: coverage (HTML)",
+      "detail": "Run tests with branch coverage; writes htmlcov/index.html.",
+      "type": "shell",
+      "command": "uv",
+      "args": [
+        "run", "pytest", "--cov", "--cov-report=term-missing", "--cov-report=html"
+      ],
+      "problemMatcher": []
+    },
+    {
+      // Stops at the first failing step.
+      "label": "check: all",
+      "detail": "Lint, format check, type check, and tests: the full CI gate.",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "ruff: check", "ruff: format check", "pyright: check", "pytest: run"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}

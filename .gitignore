@@ -23,3 +23,12 @@ htmlcov/
 Thumbs.db
 Desktop.ini
 .DS_Store
+
+# VS Code: commit only the shared workspace config; anything else VS Code or an
+# extension writes into .vscode/ is per-user and stays local.
+# Pattern: https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json
