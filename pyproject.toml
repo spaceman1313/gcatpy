@@ -174,4 +174,5 @@ exclude_also = [
     "if TYPE_CHECKING:",
     "raise NotImplementedError",
     "@overload",
+    "if __name__ == .__main__.:",
 ]

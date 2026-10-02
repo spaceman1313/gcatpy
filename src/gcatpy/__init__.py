@@ -13,7 +13,9 @@ Attributes:
 
 from importlib.metadata import PackageNotFoundError, version
 
-__all__ = ["__version__"]
+from gcatpy.hello import greet
+
+__all__ = ["__version__", "greet"]
 
 _UNKNOWN_VERSION = "0.0.0+unknown"
 
