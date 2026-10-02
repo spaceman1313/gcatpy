@@ -1,0 +1,43 @@
+# EditorConfig for gcatpy: editor-neutral whitespace and encoding rules.
+# Read natively by PyCharm and many other editors; VS Code needs the
+# EditorConfig extension (recommended in .vscode/extensions.json).
+#
+# Spec:        https://spec.editorconfig.org/
+# Properties:  https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties
+#
+# Ownership (keep these from overlapping):
+#   .editorconfig           indentation, line endings, final newline, trailing whitespace, charset
+#   .gitattributes          line-ending normalization in the repository, regardless of editor
+#   pyproject.toml          line length (88) and all lint/format/type/test rules
+#   .vscode/settings.json   VS Code-only wiring; must NOT set files.trimTrailingWhitespace,
+#                           because a VS Code setting of true overrides the "false" below.
+
+# Stop searching parent directories for other .editorconfig files.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+# JSON/JSONC (VS Code config, cspell.json) and YAML (GitHub Actions) use 2 spaces.
+[*.{json,jsonc,yml,yaml}]
+indent_size = 2
+
+# Markdown: two trailing spaces encode a hard line break; never strip them.
+[*.md]
+trim_trailing_whitespace = false
+
+# GCAT data and test fixtures. Trailing tabs encode empty trailing fields, so
+# stripping them would silently corrupt the data. The Tab key must insert a
+# literal tab, the field separator.
+[*.{tsv,csv}]
+trim_trailing_whitespace = false
+indent_style = tab
+
+# Windows-only scripts keep CRLF (matches .gitattributes).
+[*.{ps1,bat,cmd}]
+end_of_line = crlf

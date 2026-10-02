@@ -1,0 +1,55 @@
+# Project dictionary for Code Spell Checker (cspell).
+# One word per line; case-insensitive unless capitalized as a proper noun.
+# New words are appended by the editor's "Add to dictionary: project-words"
+# quick fix. Keep the list sorted and remove words that fall out of use.
+# Format: https://cspell.org/docs/dictionaries/custom-dictionaries
+
+# GCAT domain
+GCAT
+gcatpy
+JCAT
+McDowell
+satcat
+
+# Python libraries and tools
+dtype
+dtypes
+inplace
+isort
+pandera
+pathlib
+Perflint
+platformdirs
+pyarrow
+pycodestyle
+pydocstyle
+Pyflakes
+pytest
+pyupgrade
+venv
+
+# pytest and coverage configuration keys
+addopts
+capsys
+filterwarnings
+htmlcov
+minversion
+pkgs
+testpaths
+xfail
+
+# Build, packaging, and editor tooling
+debugpy
+mypy
+pycache
+pylint
+pyproject
+
+# VS Code extension publisher IDs (.vscode/extensions.json)
+autopep
+charliermarsh
+mechatroner
+tamasfe
+
+# Added by cspell (add to dictionary)
+

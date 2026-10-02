@@ -1,0 +1,45 @@
+// Code Spell Checker (cspell) configuration for gcatpy.
+// Read by the VS Code extension and by the `cspell` CLI, so editor and any
+// future CI check use identical rules.
+//
+// Config reference:   https://cspell.org/docs/Configuration
+// Custom dictionaries: https://cspell.org/docs/dictionaries/custom-dictionaries
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "language": "en",
+
+  // Project word list. "addWords": true makes the editor's quick fix
+  // ("Add to dictionary: project-words") append to this file instead of
+  // writing cSpell.words into .vscode/settings.json.
+  "dictionaryDefinitions": [
+    {
+      "name": "project-words",
+      "path": "./.cspell/project-words.txt",
+      "addWords": true
+    }
+  ],
+  "dictionaries": ["project-words"],
+
+  // Check dot-files and dot-folders too (.vscode/, .github/workflows/, .editorconfig);
+  // cspell skips them by default.
+  "enableGlobDot": true,
+
+  "ignorePaths": [
+    // GCAT data and fixtures: abbreviations, codes, and transliterated names
+    // would produce endless false positives.
+    "**/*.tsv",
+    "**/*.csv",
+    // Generated files, environments, and caches.
+    "uv.lock",
+    ".git/**",
+    ".venv/**",
+    "**/__pycache__/**",
+    ".pytest_cache/**",
+    ".ruff_cache/**",
+    ".coverage",
+    "htmlcov/**",
+    "dist/**",
+    "build/**"
+  ]
+}
