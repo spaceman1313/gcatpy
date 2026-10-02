@@ -1,0 +1,43 @@
+// Debug configurations (Run and Debug view, F5).
+// The interpreter is whichever one VS Code has selected (normally ./.venv).
+// Reference: https://code.visualstudio.com/docs/python/debugging
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "gcatpy: python -m gcatpy",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "gcatpy",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "Python: current file",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      // Used automatically by "Debug Test" in the Testing panel and the editor
+      // gutter. justMyCode=false lets you step into pandas/pyarrow/pandera when a
+      // test fails inside the library stack (dtype and schema issues).
+      // https://code.visualstudio.com/docs/python/testing#_debug-tests
+      "name": "Python: debug tests",
+      "type": "debugpy",
+      "request": "launch",
+      "purpose": ["debug-test"],
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+        // pytest-cov's tracer conflicts with the debugger's; keep coverage off
+        // even if --cov is added to [tool.pytest] addopts later.
+        "PYTEST_ADDOPTS": "--no-cov"
+      }
+    }
+  ]
+}
