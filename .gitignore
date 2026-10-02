@@ -8,3 +8,18 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Test and coverage artifacts (pytest, pytest-cov / coverage.py)
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.pytest_cache/
+
+# Tool caches (Ruff, pyright)
+.ruff_cache/
+
+# OS / editor clutter
+Thumbs.db
+Desktop.ini
+.DS_Store

@@ -1,14 +1,177 @@
+# =============================================================================
+# gcatpy — project metadata, dependencies, and tool configuration.
+#
+# Metadata spec:        https://packaging.python.org/en/latest/specifications/pyproject-toml/
+# License (PEP 639):    https://peps.python.org/pep-0639/
+# Dependency groups:    https://peps.python.org/pep-0735/
+# Build backend:        https://docs.astral.sh/uv/concepts/build-backend/
+# =============================================================================
+
 [project]
 name = "gcatpy"
 version = "0.1.0"
-description = "Add your description here"
+description = "A Python API for Jonathan McDowell's General Catalog of Artificial Space Objects (GCAT)."
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE", "NOTICE"]
 authors = [
-    { name = "Spaceman1313", email = "57846644+spaceman1313@users.noreply.github.com" }
+    { name = "Spaceman1313", email = "57846644+spaceman1313@users.noreply.github.com" },
 ]
 requires-python = ">=3.13"
-dependencies = []
+keywords = [
+    "gcat",
+    "space",
+    "satellites",
+    "spacecraft",
+    "launch",
+    "catalog",
+    "orbital",
+    "pandas",
+    "dataset",
+]
+# License classifiers are omitted on purpose: PEP 639 deprecates them in favor of `license`.
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Science/Research",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Astronomy",
+    "Typing :: Typed",
+]
+# Lower bounds only (no upper caps) — standard practice for libraries so downstream
+# resolvers are not over-constrained. See https://iscinumpy.dev/post/bound-version-constraints/
+dependencies = [
+    # pandas 3.0: copy-on-write semantics by default and a dedicated `str` dtype that is
+    # PyArrow-backed when PyArrow is installed. https://pandas.pydata.org/docs/whatsnew/v3.0.0.html
+    "pandas>=3.0",
+    # Explicit because the project mandates PyArrow-backed dtypes; pandas treats it as optional.
+    # 18.0 is the first release with CPython 3.13 wheels.
+    "pyarrow>=18.0",
+    # Schema/constraint validation. The `pandas` extra is required since pandera made the
+    # DataFrame backends optional; a `polars` extra exists for a future migration.
+    "pandera[pandas]>=0.33",
+    # Per-user OS cache directory for downloaded GCAT TSVs. https://platformdirs.readthedocs.io/
+    "platformdirs>=4.3",
+]
+
+[project.urls]
+Homepage = "https://github.com/spaceman1313/gcatpy"
+Repository = "https://github.com/spaceman1313/gcatpy"
+Issues = "https://github.com/spaceman1313/gcatpy/issues"
+"GCAT data source" = "https://planet4589.org/space/gcat/"
 
 [build-system]
 requires = ["uv_build>=0.12.22,<0.13.0"]
 build-backend = "uv_build"
+
+# -----------------------------------------------------------------------------
+# Development dependencies (PEP 735). Installed by `uv sync`; never shipped to users.
+# -----------------------------------------------------------------------------
+[dependency-groups]
+dev = [
+    { include-group = "lint" },
+    { include-group = "test" },
+]
+lint = [
+    "ruff>=0.16",
+    # The `nodejs` extra bundles a Node runtime so pyright works without a system Node install.
+    "pyright[nodejs]>=1.1.410",
+    # Type stubs so pyright can check pandas usage; versioned to track pandas releases.
+    "pandas-stubs>=3.0",
+]
+test = [
+    "pytest>=9.0",
+    "pytest-cov>=7.0",
+]
+
+# -----------------------------------------------------------------------------
+# Ruff — linting and formatting. https://docs.astral.sh/ruff/settings/
+# -----------------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+src = ["src", "tests"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint]
+# Rule index: https://docs.astral.sh/ruff/rules/
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # Pyflakes
+    "I",    # isort
+    "N",    # pep8-naming
+    "D",    # pydocstyle (Google convention, below)
+    "UP",   # pyupgrade — modern syntax for the target version
+    "ANN",  # flake8-annotations — enforce full type hints
+    "B",    # flake8-bugbear
+    "A",    # flake8-builtins
+    "C4",   # flake8-comprehensions
+    "SIM",  # flake8-simplify
+    "RET",  # flake8-return
+    "PIE",  # flake8-pie
+    "TC",   # flake8-type-checking
+    "ICN",  # import conventions (`import pandas as pd`, etc.)
+    "PTH",  # prefer pathlib — matters for Windows/macOS/Linux path handling
+    "PD",   # pandas-vet — flags `inplace=True`, `.values`, etc.
+    "PT",   # flake8-pytest-style
+    "PERF", # Perflint
+    "ERA",  # commented-out code
+    "RUF",  # Ruff-specific rules
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.isort]
+known-first-party = ["gcatpy"]
+
+# -----------------------------------------------------------------------------
+# Pyright — static type checking. https://microsoft.github.io/pyright/#/configuration
+# -----------------------------------------------------------------------------
+[tool.pyright]
+include = ["src", "tests"]
+pythonVersion = "3.13"
+typeCheckingMode = "standard"
+venvPath = "."
+venv = ".venv"
+
+# -----------------------------------------------------------------------------
+# pytest — native TOML table, available since pytest 9.0.
+# https://docs.pytest.org/en/stable/reference/customize.html
+# -----------------------------------------------------------------------------
+[tool.pytest]
+minversion = "9.0"
+testpaths = ["tests"]
+addopts = [
+    "-ra",
+    "--import-mode=importlib",
+    "--strict-markers",
+    "--strict-config",
+]
+xfail_strict = true
+# Fail on any warning so deprecations in pandas/PyArrow/pandera surface immediately.
+# Add targeted "ignore:..." entries here only with a comment explaining why.
+filterwarnings = ["error"]
+
+# -----------------------------------------------------------------------------
+# Coverage — used via pytest-cov (`uv run pytest --cov`).
+# https://coverage.readthedocs.io/en/latest/config.html
+# -----------------------------------------------------------------------------
+[tool.coverage.run]
+source_pkgs = ["gcatpy"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_also = [
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "@overload",
+]

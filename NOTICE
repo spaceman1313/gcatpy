@@ -1,0 +1,52 @@
+gcatpy
+Copyright (c) 2026 Spaceman1313
+
+The gcatpy source code is licensed under the MIT License; see LICENSE.
+
+-------------------------------------------------------------------------------
+Third-party data: General Catalog of Artificial Space Objects (GCAT)
+-------------------------------------------------------------------------------
+
+gcatpy reads data from the General Catalog of Artificial Space Objects (GCAT),
+compiled and maintained by Jonathan McDowell.
+
+  Source:     https://planet4589.org/space/gcat/
+  Copyright:  (c) 2020-2026 Jonathan McDowell
+  License:    Creative Commons Attribution 4.0 International (CC BY 4.0)
+              https://creativecommons.org/licenses/by/4.0/
+              Legal code: https://creativecommons.org/licenses/by/4.0/legalcode.en
+
+GCAT data are NOT covered by the MIT License. They remain under CC BY 4.0, and
+anyone redistributing them, including data loaded or exported through gcatpy,
+must comply with its attribution terms.
+
+Required citation:
+
+  McDowell, J., 2020: General Catalog of Artificial Space Objects,
+  https://planet4589.org/space/gcat
+
+When a specific GCAT release is used, McDowell also gives this form:
+
+  McDowell, Jonathan C., 2020. General Catalog of Artificial Space Objects,
+  Release <version>, https://planet4589.org/space/gcat
+
+Distribution of GCAT data in this project:
+
+  - The published gcatpy package (wheel) contains no GCAT data. Data are
+    downloaded from the source above into a local, per-user cache only when
+    the user explicitly requests it.
+  - A small subset of GCAT records is redistributed in this repository as test
+    fixtures under tests/fixtures/, under CC BY 4.0.
+
+Modifications (CC BY 4.0, Section 3(a)(1)(B)):
+
+  Data loaded through gcatpy are derived from GCAT and have been modified:
+  files are parsed into typed tables, "-" placeholders are converted to nulls,
+  and date fields are split into the raw string, a parsed timestamp, and a
+  precision/uncertainty field. Test fixtures are unmodified extracts of the
+  original TSV files unless their accompanying README states otherwise.
+
+No endorsement:
+
+  gcatpy is an independent project. It is not affiliated with, sponsored by,
+  or endorsed by Jonathan McDowell (CC BY 4.0, Section 2(a)(6)).
