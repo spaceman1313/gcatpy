@@ -28,7 +28,9 @@ def test_version_matches_distribution_metadata() -> None:
     assert gcatpy.__version__ == version("gcatpy")
 
 
-def test_version_falls_back_when_metadata_missing(patched_gcatpy: pytest.MonkeyPatch) -> None:
+def test_version_falls_back_when_metadata_missing(
+    patched_gcatpy: pytest.MonkeyPatch,
+) -> None:
     """Importing without installed metadata yields a placeholder instead of raising."""
 
     def _missing(distribution_name: str) -> str:

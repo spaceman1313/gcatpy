@@ -1,7 +1,8 @@
 """Placeholder greeting used to verify that gcatpy installs, imports, and runs.
 
 This module exists only to exercise the packaging and tooling pipeline (import,
-``python -m gcatpy``, type checking, tests, CI). Remove it once real functionality lands.
+``python -m gcatpy``, type checking, tests, CI). Remove it once real functionality
+lands.
 """
 
 DEFAULT_NAME = "world"

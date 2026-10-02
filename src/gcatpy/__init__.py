@@ -1,4 +1,4 @@
-"""gcatpy: a Python API for Jonathan McDowell's General Catalog of Artificial Space Objects.
+"""gcatpy: a Python API for McDowell's General Catalog of Artificial Space Objects.
 
 GCAT data are by Jonathan McDowell and licensed under CC BY 4.0
 (https://creativecommons.org/licenses/by/4.0/). Cite as:
