@@ -1,0 +1,14 @@
+[project]
+name = "gcatpy"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Spaceman1313", email = "57846644+spaceman1313@users.noreply.github.com" }
+]
+requires-python = ">=3.13"
+dependencies = []
+
+[build-system]
+requires = ["uv_build>=0.12.22,<0.13.0"]
+build-backend = "uv_build"

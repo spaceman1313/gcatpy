@@ -1,0 +1,40 @@
+# .gitattributes for gcatpy
+# Normalize line endings so Windows, macOS, and Linux checkouts produce identical
+# files and Ruff/pytest never see spurious CRLF diffs.
+# Reference: https://git-scm.com/docs/gitattributes#_end_of_line_conversion
+
+# Default: let Git detect text files, store with LF, check out with LF.
+* text=auto eol=lf
+
+# Source, config, and docs
+*.py      text eol=lf diff=python
+*.pyi     text eol=lf diff=python
+*.toml    text eol=lf
+*.cfg     text eol=lf
+*.ini     text eol=lf
+*.yml     text eol=lf
+*.yaml    text eol=lf
+*.json    text eol=lf
+*.md      text eol=lf diff=markdown
+*.rst     text eol=lf
+*.txt     text eol=lf
+*.lock    text eol=lf
+*.svg     text eol=lf
+
+# GCAT data fixtures: keep byte-stable (tab-separated, LF) so tests are reproducible.
+*.tsv     text eol=lf
+*.csv     text eol=lf
+
+# Windows-only scripts must keep CRLF.
+*.ps1     text eol=crlf
+*.bat     text eol=crlf
+*.cmd     text eol=crlf
+
+# Binary files: never convert or diff as text.
+*.parquet binary
+*.xlsx    binary
+*.png     binary
+*.jpg     binary
+*.pdf     binary
+*.zip     binary
+*.gz      binary
