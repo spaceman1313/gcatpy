@@ -1,0 +1,43 @@
+// Workspace extension recommendations for gcatpy.
+// VS Code prompts contributors to install these when the folder is opened.
+// Docs: https://code.visualstudio.com/docs/configure/extensions/extension-marketplace#_workspace-recommended-extensions
+{
+  "recommendations": [
+    // Python language support, interpreter selection, Testing UI (pytest).
+    "ms-python.python",
+    // Language server; runs the pyright engine and reads [tool.pyright] from pyproject.toml.
+    "ms-python.vscode-pylance",
+    // Debugger used by launch.json ("type": "debugpy").
+    "ms-python.debugpy",
+    // Lint + format via the Ruff language server; uses the Ruff pinned in .venv.
+    "charliermarsh.ruff",
+    // TOML support with pyproject.toml schema validation (via SchemaStore).
+    "tamasfe.even-better-toml",
+    // Column-aligned viewing/querying of GCAT TSV files and test fixtures.
+    "mechatroner.rainbow-csv",
+    // Syntax, schema validation, and run status for .github/workflows/*.yml.
+    "github.vscode-github-actions",
+    // Google-style docstring skeletons (Args/Returns/Raises) from the signature;
+    // configured as "google-notypes" in settings.json because types live in annotations.
+    "njpwerner.autodocstring",
+    // Alt+Q re-wraps comment/docstring prose to the 88-col ruler; Ruff's formatter
+    // does not reflow prose.
+    "stkb.rewrap",
+    // Code-aware spell checking of identifiers, comments, and docstrings;
+    // project dictionary and ignore paths live in cspell.json at the repo root.
+    "streetsidesoftware.code-spell-checker",
+    // Applies .editorconfig (indentation, line endings, final newline, trailing
+    // whitespace, charset); VS Code has no built-in EditorConfig support.
+    "editorconfig.editorconfig"
+  ],
+  // Tools superseded by Ruff (lint, format, isort) or by pyright (type checking).
+  // Installing them alongside would produce duplicate or conflicting diagnostics and edits.
+  "unwantedRecommendations": [
+    "ms-python.black-formatter",
+    "ms-python.autopep8",
+    "ms-python.isort",
+    "ms-python.flake8",
+    "ms-python.pylint",
+    "ms-python.mypy-type-checker"
+  ]
+}

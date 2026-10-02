@@ -1,0 +1,113 @@
+// Workspace settings for gcatpy (committed; shared by all contributors).
+//
+// Ownership: this file only wires VS Code to the project's tools. It must not
+// redefine their configuration:
+//   pyproject.toml   Ruff rules, line length, pyright mode, pytest options
+//   .editorconfig    indentation, line endings, final newline, trailing whitespace
+//   cspell.json      spelling dictionary and ignore paths
+// In particular, do not set files.trimTrailingWhitespace here: a VS Code value
+// of true overrides .editorconfig's "false" for TSV fixtures and Markdown.
+// Personal preferences (theme, fonts, inlay hints) belong in User settings.
+//
+// Settings reference: https://code.visualstudio.com/docs/configure/settings
+{
+  // ---------------------------------------------------------------------------
+  // Python interpreter
+  // The Python extension auto-discovers ./.venv (created by `uv sync`). No path
+  // is hard-coded: it differs between Windows (.venv\Scripts\python.exe) and
+  // macOS/Linux (.venv/bin/python).
+  // https://code.visualstudio.com/docs/python/environments
+  // ---------------------------------------------------------------------------
+  "python.terminal.activateEnvironment": true,
+
+  // ---------------------------------------------------------------------------
+  // Ruff: formatter, linter, import sorter.
+  // "fromEnvironment" runs the Ruff version locked in uv.lock (falling back to
+  // the extension's bundled copy only if .venv is missing), so the editor and
+  // CI agree. Rules come from [tool.ruff] in pyproject.toml.
+  // https://docs.astral.sh/ruff/editors/settings/
+  //
+  // Lint policy: report, never auto-fix. No source.fixAll / organizeImports
+  // actions run on save; every violation (including unsorted imports, I001)
+  // stays in the Problems panel until fixed deliberately via the lightbulb
+  // (Ctrl+.), the "Ruff: Fix all auto-fixable problems" command, or the
+  // "ruff: fix" task.
+  // ---------------------------------------------------------------------------
+  "ruff.importStrategy": "fromEnvironment",
+
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    // Explicitly empty so no extension (Ruff, Pylance, or a user-level setting)
+    // applies code actions on save in this workspace.
+    "editor.codeActionsOnSave": {}
+  },
+
+  // Visual guide at the project line length (pyproject.toml: line-length = 88).
+  // Rewrap (Alt+Q) also wraps comments, docstrings, and Markdown to this ruler.
+  // Keep in sync with pyproject.toml if the line length changes.
+  // https://stkb.github.io/Rewrap/configuration/#wrapping-column
+  "editor.rulers": [88],
+
+  // ---------------------------------------------------------------------------
+  // Pylance: type checking.
+  // typeCheckingMode, include, pythonVersion, and venv are read from
+  // [tool.pyright] in pyproject.toml, which takes precedence over
+  // python.analysis.* settings. Do not set them here.
+  // https://microsoft.github.io/pyright/#/configuration
+  //
+  // Pylance bundles its own pyright build, which can differ from the pyright
+  // pinned in uv.lock. The `pyright: check` task (and CI) is authoritative;
+  // editor squiggles are advisory.
+  // ---------------------------------------------------------------------------
+  "python.analysis.diagnosticMode": "workspace",
+  "python.analysis.autoImportCompletions": true,
+
+  // ---------------------------------------------------------------------------
+  // Testing: pytest via the Testing panel. Options come from [tool.pytest].
+  // https://code.visualstudio.com/docs/python/testing
+  // ---------------------------------------------------------------------------
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestArgs": [],
+
+  // ---------------------------------------------------------------------------
+  // autoDocstring: Google-style skeletons without types. Signatures are fully
+  // annotated, so types in docstrings would duplicate them and drift; the Google
+  // style guide only requires docstring types when annotations are absent.
+  // https://google.github.io/styleguide/pyguide.html#383-functions-and-methods
+  // ---------------------------------------------------------------------------
+  "autoDocstring.docstringFormat": "google-notypes",
+
+  // ---------------------------------------------------------------------------
+  // Explorer, search, and file-watcher hygiene: hide tool caches and build output.
+  // ---------------------------------------------------------------------------
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/.ruff_cache": true,
+    "**/*.egg-info": true
+  },
+  "search.exclude": {
+    "**/.venv": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/htmlcov": true,
+    "uv.lock": true
+  },
+  "files.watcherExclude": {
+    "**/.venv/**": true,
+    "**/.ruff_cache/**": true,
+    "**/.pytest_cache/**": true,
+    "**/htmlcov/**": true
+  },
+
+  // ---------------------------------------------------------------------------
+  // TOML (Even Better TOML): available for manual Format Document, but not on
+  // save, so the hand-aligned comments in pyproject.toml are preserved.
+  // ---------------------------------------------------------------------------
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml",
+    "editor.formatOnSave": false
+  }
+}
