@@ -1,0 +1,107 @@
+# Continuous integration for gcatpy.
+#
+# Runs the same four checks as the VS Code "check: all" task
+# (.vscode/tasks.json): ruff check, ruff format check, pyright, pytest.
+# Every command goes through `uv run` against the committed uv.lock, so CI
+# uses exactly the tool versions developers use locally.
+#
+#   lint job:  ruff check, ruff format --check, pyright   (once, Ubuntu, 3.13)
+#   test job:  pytest on {Ubuntu, Windows, macOS} x {3.13, 3.14}
+#
+# Static checks run once because their result does not depend on the runner:
+# Ruff targets py313 and pyright pins pythonVersion = "3.13" in pyproject.toml.
+#
+# Workflow syntax:  https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax
+# setup-uv:         https://github.com/astral-sh/setup-uv
+# uv in Actions:    https://docs.astral.sh/uv/guides/integration/github/
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Least privilege: the jobs only read the repository.
+# https://docs.github.com/en/actions/reference/security/secure-use#principle-of-least-privilege
+permissions:
+  contents: read
+
+# A new push to a PR cancels that PR's in-progress run; runs on main are never
+# cancelled, so every commit on main gets a complete result.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  # Fail (rather than silently re-lock) if uv.lock is out of date with
+  # pyproject.toml. Equivalent to passing --locked to every uv command.
+  # https://docs.astral.sh/uv/reference/environment/#uv_locked
+  UV_LOCKED: "1"
+  # Colored output in the Actions log.
+  FORCE_COLOR: "1"
+
+jobs:
+  lint:
+    name: Lint and type-check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # Actions are pinned to full commit SHAs (tag in the trailing comment)
+      # so a moved or compromised tag cannot change what runs.
+      # https://docs.github.com/en/actions/reference/security/secure-use#pin-actions-to-a-full-length-commit-sha
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install uv and Python 3.13
+        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: uv sync
+
+      # `github` output format turns violations into inline PR annotations.
+      # https://docs.astral.sh/ruff/settings/#output-format
+      - name: Ruff check
+        run: uv run ruff check --output-format=github .
+
+      - name: Ruff format check
+        run: uv run ruff format --check --diff .
+
+      - name: Pyright
+        run: uv run pyright
+
+  test:
+    name: Test (${{ matrix.os }}, Python ${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      # Let every combination finish so one failure shows the full picture
+      # (e.g. Windows-only vs. all platforms).
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        # 3.13 is the minimum (requires-python); 3.14 is the newest release.
+        python-version: ["3.13", "3.14"]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # python-version sets UV_PYTHON for later steps; uv downloads that
+      # interpreter if the runner does not already have it.
+      - name: Install uv and Python ${{ matrix.python-version }}
+        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Pytest
+        run: uv run pytest
