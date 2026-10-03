@@ -115,6 +115,37 @@ used, because GitHub's documentation does not list it.
 GitHub's default merge-commit message contains the PR number and title but not the
 description, so the `Refs #N` footers are the only issue links in `git log`.
 
+#### AI-assisted commits
+
+When an AI coding assistant contributed a significant part of a commit, the
+commit carries an `Assisted-by:` trailer. The format follows the
+[Linux kernel convention][kernel-ai], which OpenSSF is considering for its own
+projects ([ossf/tac#628][ossf-628]):
+
+```text
+Assisted-by: <agent>:<model_version> [tool1] [tool2]
+```
+
+- `<agent>` names the assistant and `<model_version>` the model, for example
+  `Assisted-by: Claude:claude-opus-5-5`. The optional tools are specialized
+  analysis tools the assistant used. Routine tools (git, uv, Ruff, pyright,
+  pytest, editors) are not listed.
+- Trivial help, such as single-line autocompletion, does not need the trailer.
+- The trailer goes in the footer block, after any `Refs #N` or
+  `BREAKING CHANGE:` footer. It is a valid Conventional Commits footer, since its
+  token uses `-` in place of spaces (spec item 9).
+- AI assistants never add a `Co-Authored-By:` trailer naming themselves. That
+  trailer claims authorship, and authorship and responsibility for the change
+  stay with the human committer. `Co-Authored-By:` remains in use for human
+  co-authors.
+- Tools that add their own attribution by default are configured not to, in
+  both commits and PR descriptions. For Claude Code, the
+  [`attribution` setting][cc-attribution] in `.claude/settings.json` turns it
+  off. `AGENTS.md`, the tool-neutral agent instructions file, tells every
+  assistant to add `Assisted-by:` instead. Assistants that do not read it need
+  equivalent configuration, or the committer adds the trailer.
+- PR descriptions follow the format in [Issue linking](#issue-linking).
+
 #### Examples
 
 Each block below is one complete commit message.
@@ -202,6 +233,8 @@ and on whether a local hook framework is adopted (open question 3).
   is chosen.
 - Breaking changes are explicit and machine-detectable.
 - Issue links survive in git history independently of GitHub.
+- AI-assisted commits are identifiable and distinct from human co-authorship,
+  for example `git log --grep '^Assisted-by:'`.
 
 **Negative**
 
@@ -211,6 +244,9 @@ and on whether a local hook framework is adopted (open question 3).
 - The scope list needs maintenance as the package grows.
 - Until enforcement is automated, non-conforming commits can reach `main` if review
   misses them.
+- AI tools default to their own attribution, usually `Co-Authored-By:`. Each
+  assistant must be configured, and a manually added `Assisted-by:` trailer can
+  be forgotten.
 
 ## Open questions
 
@@ -244,6 +280,10 @@ These need decisions before the status moves to **Accepted**:
 - [pre-commit][pre-commit]
 - [python-semantic-release][psr]
 - [git-cliff][git-cliff]
+- [Linux kernel: AI Coding Assistants][kernel-ai]
+- [OpenSSF TAC issue #628: Assisted-by trailer][ossf-628]
+- [Fedora AI-Assisted Contributions Policy][fedora-ai]
+- [Claude Code settings: `attribution`][cc-attribution]
 
 [cc]: https://www.conventionalcommits.org/en/v1.0.0/
 [commitlint-cc]: https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional
@@ -257,3 +297,7 @@ These need decisions before the status moves to **Accepted**:
 [pre-commit]: https://pre-commit.com/
 [psr]: https://python-semantic-release.readthedocs.io/
 [git-cliff]: https://git-cliff.org/
+[kernel-ai]: https://docs.kernel.org/process/coding-assistants.html
+[ossf-628]: https://github.com/ossf/tac/issues/628
+[fedora-ai]: https://docs.fedoraproject.org/en-US/council/policy/ai-contribution-policy/
+[cc-attribution]: https://code.claude.com/docs/en/settings-reference#attribution
