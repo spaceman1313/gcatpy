@@ -32,3 +32,6 @@ Desktop.ini
 !.vscode/launch.json
 !.vscode/settings.json
 !.vscode/tasks.json
+
+# Claude Code: personal overrides stay local (shared config in .claude/ is committed)
+.claude/settings.local.json

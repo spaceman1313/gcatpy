@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(uv run ruff *)",
+      "Bash(uv run pyright *)",
+      "Bash(uv run pyright)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "WebFetch(domain:planet4589.org)"
+    ],
+    "ask": [
+      "Bash(uv run pytest)",
+      "Bash(uv run pytest *)",
+      "Bash(uv add *)",
+      "Bash(uv remove *)",
+      "Bash(git push *)",
+      "Bash(git commit *)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Edit(./docs/adr/0001-*.md)"
+    ]
+  },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --quiet python \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/ruff_fix.py"
+          }
+        ]
+      }
+    ]
+  }
+}
