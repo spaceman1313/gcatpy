@@ -12,6 +12,7 @@ McDowell
 satcat
 
 # Python libraries and tools
+docstrings
 dtype
 dtypes
 inplace
@@ -55,6 +56,7 @@ tamasfe
 # People and references
 Driessen
 Nygard
+ossf
 
 # General English missing from cspell's dictionary
 relitigate
