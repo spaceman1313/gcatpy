@@ -44,6 +44,7 @@ mypy
 pycache
 pylint
 pyproject
+shortlog
 
 # VS Code extension publisher IDs (.vscode/extensions.json)
 autopep
@@ -52,6 +53,7 @@ mechatroner
 tamasfe
 
 # People and references
+Driessen
 Nygard
 
 # General English missing from cspell's dictionary
