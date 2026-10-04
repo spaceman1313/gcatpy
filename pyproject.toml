@@ -53,7 +53,8 @@ dependencies = [
     # Schema/constraint validation. The `pandas` extra is required since pandera made the
     # DataFrame backends optional; a `polars` extra exists for a future migration.
     "pandera[pandas]>=0.33",
-    # Per-user OS cache directory for downloaded GCAT TSVs. https://platformdirs.readthedocs.io/
+    # Per-user data directory for the gcatpy data root (ADR 0003).
+    # https://platformdirs.readthedocs.io/
     "platformdirs>=4.3",
 ]
 
