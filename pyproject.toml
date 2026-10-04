@@ -156,6 +156,9 @@ addopts = [
     "--strict-config",
 ]
 xfail_strict = true
+markers = [
+    "slow: real network access; excluded by default with -m 'not slow'",
+]
 # Fail on any warning so deprecations in pandas/PyArrow/pandera surface immediately.
 # Add targeted "ignore:..." entries here only with a comment explaining why.
 filterwarnings = ["error"]

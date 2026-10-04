@@ -12,10 +12,13 @@ McDowell
 satcat
 
 # Python libraries and tools
+autouse
 appauthor
 docstrings
 dtype
 dtypes
+
+excinfo
 inplace
 isort
 notypes
@@ -63,6 +66,7 @@ stkb
 tamasfe
 
 # Other computer terms (OS identifiers, environment variables)
+afile
 LOCALAPPDATA
 O_CREAT
 
@@ -72,7 +76,7 @@ Nygard
 ossf
 
 # General English missing from cspell's dictionary
+pasteable
 relitigate
 
 # Added by cspell (add to dictionary)
-
