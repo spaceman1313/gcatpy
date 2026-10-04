@@ -35,3 +35,7 @@ Desktop.ini
 
 # Claude Code: personal overrides stay local (shared config in .claude/ is committed)
 .claude/settings.local.json
+
+# Working implementation plans for in-progress branches; local only, never
+# committed. Durable decisions go in docs/adr/.
+.plans/

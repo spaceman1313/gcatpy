@@ -25,6 +25,9 @@
   // cspell skips them by default.
   "enableGlobDot": true,
 
+  // Skip anything .gitignore excludes (local plans, caches, build output).
+  "useGitignore": true,
+
   "ignorePaths": [
     // GCAT data and fixtures: abbreviations, codes, and transliterated names
     // would produce endless false positives.
