@@ -54,6 +54,8 @@ configuration lives alongside it (for Claude Code, `.claude/`).
   changes, propose a plan and wait for approval before editing.
 - Commits and branches follow ADR 0002 (Conventional Commits, 72-column
   header and body, `Refs #N` footers, `<type>/<desc>` branches).
+- Commit at logical boundaries, not after each edit. While changes are
+  still under discussion, leave them uncommitted.
 - Commits you write end with an `Assisted-by: <agent>:<model_version>`
   trailer, e.g. `Assisted-by: Claude:claude-opus-5-5` (ADR 0002). Never add
   a `Co-Authored-By:` trailer naming yourself. PR descriptions carry no
