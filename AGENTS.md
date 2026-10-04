@@ -45,6 +45,9 @@ configuration lives alongside it (for Claude Code, `.claude/`).
   `strict` | `warn` (default) | `report`.
 - Python 3.13 minimum. Full type hints (pyright standard). Google-style
   docstrings on every module, class, method, and function. Line length 88.
+- Prefer object-oriented organization: an operation on one object's data
+  is a method of its class (e.g. `DataRoot.ensure()`), not a module
+  function. Module functions are for operations with no natural owner.
 - Test fixtures are GCAT data under CC BY 4.0; keep the McDowell citation
   alongside them.
 
