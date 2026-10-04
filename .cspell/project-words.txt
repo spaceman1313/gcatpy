@@ -18,6 +18,7 @@ dtype
 dtypes
 inplace
 isort
+notypes
 pandera
 pathlib
 Perflint
@@ -57,6 +58,8 @@ shortlog
 autopep
 charliermarsh
 mechatroner
+njpwerner
+stkb
 tamasfe
 
 # Other computer terms (OS identifiers, environment variables)
