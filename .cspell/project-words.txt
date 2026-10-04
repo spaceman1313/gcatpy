@@ -12,6 +12,7 @@ McDowell
 satcat
 
 # Python libraries and tools
+appauthor
 docstrings
 dtype
 dtypes
@@ -28,6 +29,11 @@ pydocstyle
 Pyflakes
 pytest
 pyupgrade
+scikit
+startfile
+stdlib
+tomli
+tomllib
 venv
 
 # pytest and coverage configuration keys
@@ -55,6 +61,10 @@ mechatroner
 njpwerner
 stkb
 tamasfe
+
+# Other computer terms (OS identifiers, environment variables)
+LOCALAPPDATA
+O_CREAT
 
 # People and references
 Driessen
