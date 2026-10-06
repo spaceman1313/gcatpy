@@ -59,3 +59,6 @@ configuration lives alongside it (for Claude Code, `.claude/`).
   a `Co-Authored-By:` trailer naming yourself. PR descriptions carry no
   attribution line.
 - Record significant decisions as a new ADR from `docs/adr/template.md`.
+- When you introduce a real domain or technical term, add it to
+  `.cspell/project-words.txt` under the matching category; never add
+  typos. CI spell-checks the whole repository.

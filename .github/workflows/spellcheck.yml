@@ -1,0 +1,35 @@
+# Repository-wide spell check.
+#
+# Local spell checking is editor-only (VS Code Code Spell Checker), which
+# only sees open files. This workflow checks every file on each push and PR
+# using the same cspell.json and .cspell/project-words.txt as the extension.
+# Docs: https://github.com/streetsidesoftware/cspell-action
+name: Spell check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  spellcheck:
+    name: spellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - uses: streetsidesoftware/cspell-action@v8
+        with:
+          # Check the whole repo, not just files changed in the PR/push.
+          incremental_files_only: false
+          # cspell.json deliberately covers .vscode/ and .github/;
+          # ignorePaths in cspell.json still apply.
+          check_dot_files: true
+          config: cspell.json
+          inline: error
+          strict: true

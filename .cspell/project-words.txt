@@ -17,6 +17,7 @@ dtype
 dtypes
 inplace
 isort
+notypes
 pandera
 pathlib
 Perflint
@@ -51,6 +52,8 @@ shortlog
 autopep
 charliermarsh
 mechatroner
+njpwerner
+stkb
 tamasfe
 
 # People and references
