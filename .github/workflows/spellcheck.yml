@@ -19,11 +19,11 @@ jobs:
     name: spellcheck
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
-      - uses: streetsidesoftware/cspell-action@v8
+      - uses: streetsidesoftware/cspell-action@6f3c77c1406bc930f944ba97e9801a22e42caf58 # v9.1.0
         with:
           # Check the whole repo, not just files changed in the PR/push.
           incremental_files_only: false
